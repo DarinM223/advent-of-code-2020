@@ -1,4 +1,6 @@
-(defpackage utils (:use :cl :iterate))
+(defpackage utils
+  (:use :cl :iterate)
+  (:export :xor))
 (in-package :utils)
 
 (defmacro-clause (FOR var in-lines stream)
@@ -6,3 +8,8 @@
   `(progn
      (for ,var = (read-line ,stream nil))
      (while ,var)))
+
+(defun xor (a b)
+  "Logical exclusive or"
+  (and (or a b)
+       (not (and a b))))
