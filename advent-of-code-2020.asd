@@ -2,7 +2,8 @@
   :version "0.1.0"
   :author ""
   :license ""
-  :depends-on ("iterate")
+  :depends-on ("iterate"
+               "fset")
   :components ((:module "src"
                 :components
                 ((:file "utils")
@@ -10,7 +11,8 @@
                  (:file "day2")
                  (:file "day3")
                  (:file "day4")
-                 (:file "day5"))))
+                 (:file "day5")
+                 (:file "day6"))))
   :description ""
   :in-order-to ((test-op (test-op "advent-of-code-2020/tests"))))
 

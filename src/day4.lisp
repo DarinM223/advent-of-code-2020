@@ -1,14 +1,6 @@
 (defpackage day4 (:use :cl :iterate :utils))
 (in-package :day4)
 
-(defun split-list (l)
-  (iter (with start = 0)
-        (for str in-sequence l with-index i)
-        (when (string= str "")
-          (progn
-            (collect (subseq l start i))
-            (setf start (+ i 1))))))
-
 (defvar *input*
   (with-open-file (stream #P"../resources/day4.txt")
     (split-list (iter (for line in-lines stream) (collect line)))))
