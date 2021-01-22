@@ -13,7 +13,8 @@
                  (:file "day4")
                  (:file "day5")
                  (:file "day6")
-                 (:file "day7"))))
+                 (:file "day7")
+                 (:file "day8"))))
   :description ""
   :in-order-to ((test-op (test-op "advent-of-code-2020/tests"))))
 
