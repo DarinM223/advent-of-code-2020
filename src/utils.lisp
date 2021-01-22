@@ -14,11 +14,11 @@
   (and (or a b)
        (not (and a b))))
 
-(defun split-list (l)
-  "Splits list using empty strings as separators"
+(defun split-list (l &key (separator ""))
+  "Splits list using strings as separators"
   (iter (with start = 0)
         (for str in-sequence l with-index i)
-        (when (string= str "")
+        (when (string= str separator)
           (progn
             (collect (subseq l start i))
             (setf start (+ i 1))))))
