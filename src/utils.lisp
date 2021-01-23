@@ -1,6 +1,6 @@
 (defpackage utils
   (:use :cl :iterate)
-  (:export :xor :split-list :fix-debug))
+  (:export :xor :split-list :relative-path :fix-debug))
 (in-package :utils)
 
 (defmacro-clause (FOR var in-lines stream)
@@ -22,6 +22,10 @@
           (progn
             (collect (subseq l start i))
             (setf start (+ i 1))))))
+
+(defun relative-path (path)
+  "Given a path relative to the project's path, return the full path"
+  (asdf:system-relative-pathname (asdf:find-system :advent-of-code-2020) path))
 
 (defun fix-debug (v)
   "Fixes an annoyance with SBCL's debugger where certain values

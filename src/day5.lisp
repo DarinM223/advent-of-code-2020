@@ -2,7 +2,7 @@
 (in-package :day5)
 
 (defvar *input*
-  (with-open-file (stream #P"../resources/day5.txt")
+  (with-open-file (stream (relative-path #P"resources/day5.txt"))
     (iter (for line in-lines stream) (collect line))))
 
 (defun search-range (l lower upper lower-half-ch upper-half-ch)

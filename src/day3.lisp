@@ -2,7 +2,7 @@
 (in-package :day3)
 
 (defvar *input*
-  (with-open-file (stream #P"../resources/day3.txt")
+  (with-open-file (stream (relative-path #P"resources/day3.txt"))
     (let ((lines (iter (for line in-lines stream)
                        (collect line))))
       (make-array (length lines) :initial-contents lines))))

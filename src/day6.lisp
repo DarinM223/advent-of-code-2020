@@ -4,7 +4,7 @@
 (in-package :day6)
 
 (defvar *input*
-  (with-open-file (stream #P"../resources/day6.txt")
+  (with-open-file (stream (relative-path #P"resources/day6.txt"))
     (split-list (iter (for line in-lines stream) (collect line)))))
 
 (defun total-questions (answers reducer)

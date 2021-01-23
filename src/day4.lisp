@@ -2,7 +2,7 @@
 (in-package :day4)
 
 (defvar *input*
-  (with-open-file (stream #P"../resources/day4.txt")
+  (with-open-file (stream (relative-path #P"resources/day4.txt"))
     (split-list (iter (for line in-lines stream) (collect line)))))
 
 (defun add-fields (lines)

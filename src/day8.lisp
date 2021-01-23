@@ -2,7 +2,7 @@
 (in-package :day8)
 
 (defparameter *input*
-  (with-open-file (stream #P"../resources/day8.txt")
+  (with-open-file (stream (relative-path #P"resources/day8.txt"))
     (let ((instrs (iter (for line in-lines stream)
                         (for (instr amt) = (uiop:split-string line :separator " "))
                         (collect (list instr (parse-integer amt))))))

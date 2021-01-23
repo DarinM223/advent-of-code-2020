@@ -2,7 +2,7 @@
 (in-package :day7)
 
 (defvar *input*
-  (with-open-file (stream #P"../resources/day7.txt")
+  (with-open-file (stream (relative-path #P"resources/day7.txt"))
     (iter (for line in-lines stream) (collect line))))
 
 (defun list-chunks (l &key (size 3))

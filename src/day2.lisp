@@ -5,7 +5,7 @@
   (mapcar #'parse-integer (uiop:split-string range :separator "-")))
 
 (defvar *input*
-  (with-open-file (stream #P"../resources/day2.txt")
+  (with-open-file (stream (relative-path #P"resources/day2.txt"))
     (iter (for line in-lines stream)
           (destructuring-bind (letter-repeat-range letter password)
               (uiop:split-string line :max 3 :separator " ")
