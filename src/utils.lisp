@@ -1,6 +1,6 @@
 (defpackage utils
   (:use :cl :iterate)
-  (:export :xor :split-list :relative-path :fix-debug))
+  (:export :xor :split-list :relative-path))
 (in-package :utils)
 
 (defmacro-clause (FOR var in-lines stream)
@@ -17,44 +17,12 @@
 (defun split-list (l &key (separator ""))
   "Splits list using strings as separators"
   (iter (with start = 0)
-        (for str in-sequence l with-index i)
-        (when (string= str separator)
-          (progn
-            (collect (subseq l start i))
-            (setf start (+ i 1))))))
+    (for str in-sequence l with-index i)
+    (when (string= str separator)
+      (progn
+        (collect (subseq l start i))
+        (setf start (+ i 1))))))
 
 (defun relative-path (path)
   "Given a path relative to the project's path, return the full path"
   (asdf:system-relative-pathname (asdf:find-system :advent-of-code-2020) path))
-
-(defun fix-debug (v)
-  "Fixes an annoyance with SBCL's debugger where certain values
-in let bindings won't show up in the debugger's list of
-local values for that frame.
-
-If you run this:
-
-```
-(defun foo ()
-  (declare (optimize (debug 3)))
-  (let ((a blah))
-    (break)
-    (print a)))
-
-(foo)
-```
-
-And `a` doesn't show up in the locals list for the `(FOO)` frame,
-then try wrapping `blah` with fix-debug:
-
-```
-(defun foo ()
-  (declare (optimize (debug 3)))
-  (let ((a (fix-debug blah)))
-    (break)
-    (print a)))
-
-(foo)
-```
-  "
-  (first (list v)))
