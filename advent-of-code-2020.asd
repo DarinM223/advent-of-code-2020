@@ -3,7 +3,8 @@
   :author ""
   :license ""
   :depends-on ("iterate"
-               "fset")
+               "fset"
+               "trivia")
   :components ((:module "src"
                 :components
                 ((:file "utils")
@@ -17,7 +18,8 @@
                  (:file "day8")
                  (:file "day9")
                  (:file "day10")
-                 (:file "day11"))))
+                 (:file "day11")
+                 (:file "day12"))))
   :description ""
   :in-order-to ((test-op (test-op "advent-of-code-2020/tests"))))
 
