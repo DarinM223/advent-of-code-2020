@@ -38,20 +38,15 @@
 (defparameter *valid-tickets*
   (remove-if-not (lambda (ticket) (validp ticket *rules*)) *nearby-tickets*))
 
-(defun match-rules (rule-index build numbers rules)
+(defun match-rules (rule-index build numbers guesses)
   (cond ((= (hash-table-count numbers) 0) build)
-        (t (let ((guesses (aref rules rule-index)))
-             (dolist (guess guesses)
-               (when (gethash guess numbers)
-                 (setf (gethash rule-index build) guess)
-                 (remhash guess numbers)
-
-                 (let ((rest (match-rules (+ rule-index 1) build numbers rules)))
-                   (when rest
-                     (setf (gethash guess numbers) t)
-                     (return rest)))
-
+        (t (dolist (guess (aref guesses rule-index))
+             (when (gethash guess numbers)
+               (remhash guess numbers)
+               (setf (gethash rule-index build) guess)
+               (let ((rest (match-rules (+ rule-index 1) build numbers guesses)))
                  (setf (gethash guess numbers) t)
+                 (when rest (return rest))
                  (remhash rule-index build)))))))
 
 (defun make-rules-to-ticket-index-map (rules tickets)
@@ -62,7 +57,7 @@
                (collect i)))))
     (let ((possible-choices (coerce (mapcar #'ticket-choices rules) 'vector))
           (ticket-numbers (iter (with map = (make-hash-table))
-                            (for i from 0 to 19)
+                            (for i from 0 below (length (car tickets)))
                             (setf (gethash i map) t)
                             (finally (return map)))))
       (match-rules 0 (make-hash-table) ticket-numbers possible-choices))))
