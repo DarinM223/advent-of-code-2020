@@ -9,6 +9,25 @@
      (for ,var = (read-line ,stream nil))
      (while ,var)))
 
+; Examples:
+;
+; (iter (for i from 0 to 3)
+;   (for j from 0 to 3)
+;   (collect-hashtable (i j)))
+;
+; (iter (for i in '("a" "b" "c" "d"))
+;   (for j from 0 to 3)
+;   (collect-hashtable (i j) into hash test #'equal)
+;   (finally (return (gethash "d" hash))))
+(defmacro-clause (COLLECT-HASHTABLE tuple &optional INTO var TEST test)
+  "Collects key-value tuple into hash table"
+  (let ((table (or var iterate::*result-var*))
+        (test (or test #'eql)))
+    (destructuring-bind (key value) tuple
+      `(progn
+         (with ,table = (make-hash-table :test ,test))
+         (setf (gethash ,key ,table) ,value)))))
+
 (defun xor (a b)
   "Logical exclusive or"
   (and (or a b)
