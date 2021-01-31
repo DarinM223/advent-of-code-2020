@@ -19,14 +19,22 @@
 ;   (for j from 0 to 3)
 ;   (collecting i => j into hash test #'equal)
 ;   (finally (return (gethash "d" hash))))
+;
+; (iter (for i from 0 to 4) (for j from 0 to 4)
+;   (if (= (mod i 2) 0)
+;       (collect i => (* j 2))
+;       (collect i => j))))
 (defmacro-clause (COLLECT key => value &optional INTO var TEST test)
   "Collects key-value tuple into hash table"
-  (let ((table (or var iterate::*result-var*)))
-    `(progn
-       (with ,table = (if ,test
-                          (make-hash-table :test ,test)
-                          (make-hash-table)))
-       (setf (gethash ,key ,table) ,value))))
+  (let* ((table-spec (or var iterate::*result-var*))
+         (table (iterate::extract-var table-spec)))
+    (if (car (member table iterate::*bindings* :test #'eq :key #'car))
+        `(setf (gethash ,key ,table) ,value)
+        `(progn
+           (with ,table = (if ,test
+                              (make-hash-table :test ,test)
+                              (make-hash-table)))
+           (setf (gethash ,key ,table) ,value)))))
 
 (defun xor (a b)
   "Logical exclusive or"
