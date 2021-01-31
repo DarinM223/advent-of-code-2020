@@ -7,18 +7,16 @@
 
 (defun add-fields (lines)
   (iter outer
-        (with fields-map = (make-hash-table :test 'equal))
-        (for line in lines)
-        (iter (for field in (uiop:split-string line))
-              (for (key value) = (uiop:split-string field :separator '(#\:)))
-              (setf (gethash key fields-map) value))
-        (finally (return-from outer fields-map))))
+    (for line in lines)
+    (iter (for field in (uiop:split-string line))
+      (for (key value) = (uiop:split-string field :separator '(#\:)))
+      (in outer (collect key => value test #'equal)))))
 
 (defun contains-fields (field-map required-fields)
   (iter (for field in required-fields)
-        (multiple-value-bind (v present) (gethash field field-map)
-          (declare (ignore v))
-          (always present))))
+    (multiple-value-bind (v present) (gethash field field-map)
+      (declare (ignore v))
+      (always present))))
 
 (defun validate-byr (s)
   (handler-case (let ((year (parse-integer s)))
@@ -54,13 +52,13 @@
    (char= (char s 0) #\#)
    (= (length s) 7)
    (iter (for ch in-string s from 1)
-         (for code = (char-code ch))
-         (always (or (and (>= code (char-code #\0)) (<= code (char-code #\9)))
-                     (and (>= code (char-code #\a)) (<= code (char-code #\f))))))))
+     (for code = (char-code ch))
+     (always (or (and (>= code (char-code #\0)) (<= code (char-code #\9)))
+                 (and (>= code (char-code #\a)) (<= code (char-code #\f))))))))
 
 (defun validate-ecl (s)
   (iter (for valid-clr in '("amb" "blu" "brn" "gry" "grn" "hzl" "oth"))
-        (thereis (string= s valid-clr))))
+    (thereis (string= s valid-clr))))
 
 (defun validate-pid (s)
   (and (= (length s) 9)
@@ -68,13 +66,13 @@
 
 (defun validate-fields (field-map required-fields)
   (iter (for (field validate-fn) in required-fields)
-        (multiple-value-bind (v present) (gethash field field-map)
-          (always (and present (funcall validate-fn v))))))
+    (multiple-value-bind (v present) (gethash field field-map)
+      (always (and present (funcall validate-fn v))))))
 
 (defparameter *part1*
   (let ((required-fields '("byr" "iyr" "eyr" "hgt" "hcl" "ecl" "pid")))
     (iter (for lines in *input*)
-          (counting (contains-fields (add-fields lines) required-fields)))))
+      (counting (contains-fields (add-fields lines) required-fields)))))
 
 (defparameter *part2*
   (let ((required-fields (list (list "byr" #'validate-byr)
@@ -85,4 +83,4 @@
                                (list "ecl" #'validate-ecl)
                                (list "pid" #'validate-pid))))
     (iter (for lines in *input*)
-          (counting (validate-fields (add-fields lines) required-fields)))))
+      (counting (validate-fields (add-fields lines) required-fields)))))

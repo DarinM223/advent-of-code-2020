@@ -30,14 +30,12 @@
 
 (defun run-instructions (input)
   (iter (with mask = nil)
-    (with memory = (make-hash-table))
     (for (lvalue rvalue) in input)
     (if (string= (subseq lvalue 0 4) "mask")
         (setf mask rvalue)
-        (let ((index (parse-integer (subseq lvalue 4)))
-              (value (apply-mask rvalue mask)))
-          (setf (gethash index memory) value)))
-    (finally (return memory))))
+        (let ((lvalue (parse-integer (subseq lvalue 4)))
+              (rvalue (apply-mask rvalue mask)))
+          (collect lvalue => rvalue)))))
 
 (defun address-combinations (binary)
   (iter (for ch in-string binary with-index i)
@@ -68,15 +66,14 @@
                                (address-combinations num-binary)))))))
 
 (defun run-instructions2 (input)
-  (iter (with mask = nil)
-    (with memory = (make-hash-table))
+  (iter outer
+    (with mask = nil)
     (for (lvalue rvalue) in input)
     (if (string= (subseq lvalue 0 4) "mask")
         (setf mask rvalue)
         (let* ((indexes (apply-mask2 (parse-integer (subseq lvalue 4))
                                      mask)))
-          (iter (for i in indexes) (setf (gethash i memory) rvalue))))
-    (finally (return memory))))
+          (iter (for i in indexes) (in outer (collect i => rvalue)))))))
 
 (defparameter *part1*
   (iter (for (k v) in-hashtable (run-instructions *input*))

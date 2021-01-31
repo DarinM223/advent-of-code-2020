@@ -7,20 +7,17 @@
 (defvar *input*
   (with-open-file (stream (relative-path #P"resources/day2.txt"))
     (iter (for line in-lines stream)
-          (destructuring-bind (letter-repeat-range letter password)
-              (uiop:split-string line :max 3 :separator " ")
-            (collect (list (parse-range letter-repeat-range)
-                           (char (string-right-trim ":" letter) 0)
-                           password))))))
+      (destructuring-bind (letter-repeat-range letter password)
+          (uiop:split-string line :max 3 :separator " ")
+        (collect (list (parse-range letter-repeat-range)
+                       (char (string-right-trim ":" letter) 0)
+                       password))))))
 
 (defun count-letters (letter str)
-  (iter (with letter-count = (make-hash-table))
-        (for ch in-string str)
-        (multiple-value-bind (count present) (gethash ch letter-count)
-          (if present
-              (setf (gethash ch letter-count) (+ count 1))
-              (setf (gethash ch letter-count) 1)))
-        (finally (return (gethash letter letter-count 0)))))
+  (iter (for ch in-string str)
+    (for count = (gethash ch letter-count 0))
+    (collecting ch => (+ count 1) into letter-count)
+    (finally (return (gethash letter letter-count 0)))))
 
 (defun valid-policy (policy)
   (destructuring-bind ((min-times max-times) letter password) policy
@@ -35,9 +32,6 @@
        (char= (char password i2) letter)))))
 
 (defparameter *part1*
-  (iter (for policy in *input*)
-        (counting (valid-policy policy))))
-
+  (iter (for policy in *input*) (counting (valid-policy policy))))
 (defparameter *part2*
-  (iter (for policy in *input*)
-        (counting (valid-policy2 policy))))
+  (iter (for policy in *input*) (counting (valid-policy2 policy))))

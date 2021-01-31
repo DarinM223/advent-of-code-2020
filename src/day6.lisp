@@ -13,7 +13,7 @@
 
 (defun sum-counts (input reducer)
   (iter (for answers in input)
-        (summing (fset:size (total-questions answers reducer)))))
+    (summing (fset:size (total-questions answers reducer)))))
 
 (defparameter *part1* (sum-counts *input* #'fset:union))
 (defparameter *part2* (sum-counts *input* #'fset:intersection))

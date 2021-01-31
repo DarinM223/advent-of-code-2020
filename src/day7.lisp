@@ -7,11 +7,11 @@
 
 (defun list-chunks (l &key (size 3))
   (iter (for e in l)
-        (for i first 1 then (+ i 1))
-        (collect e into chunk)
-        (when (= (mod i size) 0)
-          (collect chunk)
-          (setf chunk nil))))
+    (for i first 1 then (+ i 1))
+    (collect e into chunk)
+    (when (= (mod i size) 0)
+      (collect chunk)
+      (setf chunk nil))))
 
 (defun process-line (line)
   (let* ((words (mapcar (lambda (w) (string-trim ".," w))
@@ -23,33 +23,30 @@
         (split-list (append filtered '("contain")) :separator "contain")
       (values (concatenate 'string bagw1 bagw2)
               (iter (for (num w1 w2) in (list-chunks contains-bags))
-                    (collect (list (parse-integer num)
-                                   (concatenate 'string w1 w2))))))))
+                (collect (list (parse-integer num)
+                               (concatenate 'string w1 w2))))))))
 
 (defun make-bag-hashtable (input)
-  (iter (with bag-map = (make-hash-table :test 'equal))
-        (for line in input)
-        (for (values bag contains-bags) = (process-line line))
-        (setf (gethash bag bag-map) contains-bags)
-        (finally (return bag-map))))
+  (iter (for line in input)
+    (for (values bag contains-bags) = (process-line line))
+    (collect bag => contains-bags test #'equal)))
 
 (defun contains-color (color test-color bag-map)
-  (if (string= color test-color)
-      t
+  (or (string= color test-color)
       (iter (for (num c) in (gethash color bag-map))
-            (thereis (contains-color c test-color bag-map)))))
+        (thereis (contains-color c test-color bag-map)))))
 
 (defun nested-colors (color bag-map)
   (if (gethash color bag-map)
       (iter (for (num c) in (gethash color bag-map))
-            (summing (+ num (* num (nested-colors c bag-map)))))
+        (summing (+ num (* num (nested-colors c bag-map)))))
       0))
 
 (defparameter *part1*
   (let ((bag-map (make-bag-hashtable *input*)))
     (iter (for (color v) in-hashtable bag-map)
-          (when (not (string= color "shinygold"))
-            (counting (contains-color color "shinygold" bag-map))))))
+      (when (not (string= color "shinygold"))
+        (counting (contains-color color "shinygold" bag-map))))))
 
 (defparameter *part2*
   (nested-colors "shinygold" (make-bag-hashtable *input*)))

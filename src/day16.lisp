@@ -56,10 +56,8 @@
                      (always (valid-numberp (aref ticket i) (list rule))))
                (collect i)))))
     (let ((possible-choices (coerce (mapcar #'ticket-choices rules) 'vector))
-          (ticket-numbers (iter (with map = (make-hash-table))
-                            (for i from 0 below (length (car tickets)))
-                            (setf (gethash i map) t)
-                            (finally (return map)))))
+          (ticket-numbers (iter (for i from 0 below (length (car tickets)))
+                            (collect i => t))))
       (match-rules 0 (make-hash-table) ticket-numbers possible-choices))))
 
 (defparameter *part1*

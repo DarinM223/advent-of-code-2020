@@ -30,20 +30,18 @@
 
 (defparameter *part1*
   (iter (for code in *input*)
-        (for (values row col) = (decode code))
-        (maximize (seat-id row col))))
+    (for (values row col) = (decode code))
+    (maximize (seat-id row col))))
 
 (defparameter *part2*
-  (let ((id-map (iter (with id-map = (make-hash-table))
-                      (for code in *input*)
-                      (for (values row col) = (decode code))
-                      (setf (gethash (seat-id row col) id-map) t)
-                      (finally (return id-map)))))
+  (let ((id-map (iter (for code in *input*)
+                  (for (values row col) = (decode code))
+                  (collect (seat-id row col) => t))))
     (iter outer
-          (for row from 0 to 127)
-          (iter (for col from 0 to 7)
-                (for id = (seat-id row col))
-                (when (and (not (gethash id id-map))
-                           (gethash (+ id 1) id-map)
-                           (gethash (- id 1) id-map))
-                  (return-from outer id))))))
+      (for row from 0 to 127)
+      (iter (for col from 0 to 7)
+        (for id = (seat-id row col))
+        (when (and (not (gethash id id-map))
+                   (gethash (+ id 1) id-map)
+                   (gethash (- id 1) id-map))
+          (return-from outer id))))))

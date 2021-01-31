@@ -4,7 +4,7 @@
 (defvar *input*
   (with-open-file (stream (relative-path #P"resources/day3.txt"))
     (let ((lines (iter (for line in-lines stream)
-                       (collect line))))
+                   (collect line))))
       (make-array (length lines) :initial-contents lines))))
 
 (defun width (grid)
@@ -20,10 +20,10 @@
 
 (defun count-trees (grid y-fn x-fn)
   (iter (for y first 0 then (setf y (funcall y-fn y)))
-        (for x first 0 then (setf x (funcall x-fn x)))
-        (while (< y (length grid)))
-        (when (> y 0)
-          (counting (char= (grid-char-at grid y x) #\#)))))
+    (for x first 0 then (setf x (funcall x-fn x)))
+    (while (< y (length grid)))
+    (when (> y 0)
+      (counting (char= (grid-char-at grid y x) #\#)))))
 
 (defparameter *part1*
   (count-trees *input* (lambda (y) (+ y 1)) (lambda (x) (+ x 3))))

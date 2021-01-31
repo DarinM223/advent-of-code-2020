@@ -1,4 +1,4 @@
-(defpackage day15 (:use :cl :iterate :utils))
+(defpackage day15 (:use :cl :utils))
 (in-package :day15)
 
 (declaim (optimize (speed 3) (safety 0)))
