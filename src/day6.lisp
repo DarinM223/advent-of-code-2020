@@ -1,6 +1,4 @@
-(defpackage day6
-  (:use :cl :iterate :utils)
-  (:import-from :fset))
+(defpackage day6 (:use :cl :iterate :utils))
 (in-package :day6)
 
 (defvar *input*

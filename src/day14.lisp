@@ -1,6 +1,4 @@
-(defpackage day14
-  (:use :cl :iterate :utils)
-  (:import-from :trivia))
+(defpackage day14 (:use :cl :iterate :utils))
 (in-package :day14)
 
 (defparameter *input*

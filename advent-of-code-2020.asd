@@ -2,7 +2,9 @@
   :version "0.1.0"
   :author ""
   :license ""
-  :depends-on ("iterate"
+  :depends-on ("cl-ppcre"
+               "infix-math"
+               "iterate"
                "fset"
                "trivia")
   :components ((:module "src"
@@ -24,7 +26,8 @@
                  (:file "day14")
                  (:file "day15")
                  (:file "day16")
-                 (:file "day17"))))
+                 (:file "day17")
+                 (:file "day18"))))
   :description ""
   :in-order-to ((test-op (test-op "advent-of-code-2020/tests"))))
 
