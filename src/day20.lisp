@@ -1,15 +1,16 @@
-(defpackage day20 (:use :cl :iterate :utils))
+(defpackage day20 (:use :cl :arrows :iterate :utils))
 (in-package :day20)
 
 (defun parse-tile (tile-chunk)
-  (let* ((tile-label (car tile-chunk))
-         (tile-label-right (cadr (uiop:split-string tile-label)))
-         (tile-num-str (string-right-trim ":" tile-label-right))
-         (tile-num (parse-integer tile-num-str))
-         (rest (coerce (cdr tile-chunk) 'vector)))
+  (let ((tile-num (->> (car tile-chunk)
+                       (uiop:split-string)
+                       (cadr)
+                       (string-right-trim ":")
+                       (parse-integer)))
+        (rest (coerce (cdr tile-chunk) 'vector)))
     (list tile-num rest)))
 
-(defparameter *input*
+(defvar *input*
   (with-open-file (stream (relative-path #P"resources/day20.txt"))
     (mapcar #'parse-tile
             (split-list (iter (for line in-lines stream) (collect line))))))

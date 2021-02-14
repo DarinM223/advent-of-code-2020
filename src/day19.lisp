@@ -1,4 +1,6 @@
-(defpackage day19 (:use :cl :iterate :utils))
+(defpackage day19
+  (:use :cl :arrows :iterate :utils)
+  (:import-from :alexandria :curry))
 (in-package :day19)
 
 (defvar *input*
@@ -18,9 +20,10 @@
 (defun parse-rule (line)
   (flet ((parse-left-hand (s)
            (iter (for branch in (uiop:split-string s :separator "|"))
-             (collect (mapcar #'safe-parse-integer
-                              (remove-if (lambda (s) (string= s ""))
-                                         (uiop:split-string branch)))))))
+             (collect (->> branch
+                           (uiop:split-string)
+                           (remove-if (curry #'string= ""))
+                           (mapcar #'safe-parse-integer))))))
     (destructuring-bind (key value) (uiop:split-string line :separator ":")
       (values (parse-integer key) (parse-left-hand value)))))
 

@@ -1,4 +1,6 @@
-(defpackage day6 (:use :cl :iterate :utils))
+(defpackage day6
+  (:use :cl :arrows :iterate :utils)
+  (:import-from :alexandria :curry))
 (in-package :day6)
 
 (defvar *input*
@@ -6,8 +8,9 @@
     (split-list (iter (for line in-lines stream) (collect line)))))
 
 (defun total-questions (answers reducer)
-  (reduce reducer
-          (mapcar (lambda (answer) (fset:convert 'fset:set answer)) answers)))
+  (->> answers
+       (mapcar (curry #'fset:convert 'fset:set))
+       (reduce reducer)))
 
 (defun sum-counts (input reducer)
   (iter (for answers in input)

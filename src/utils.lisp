@@ -36,11 +36,6 @@
                               (make-hash-table)))
            (setf (gethash ,key ,table) ,value)))))
 
-(defun xor (a b)
-  "Logical exclusive or"
-  (and (or a b)
-       (not (and a b))))
-
 (defun split-list (l &key (separator ""))
   "Splits list using strings as separators"
   (iter (with start = 0)

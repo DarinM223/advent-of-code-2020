@@ -1,4 +1,4 @@
-(defpackage day11 (:use :cl :iterate :utils))
+(defpackage day11 (:use :cl :arrows :iterate :utils))
 (in-package :day11)
 
 (defvar *input*
@@ -21,16 +21,17 @@
       (or (< y 0) (>= y height) (< x 0) (>= x width)))))
 
 (defun count-occupied-adj (grid y x)
-  (count-if (lambda (p) (char= (apply #'aref (cons grid p)) #\#))
-            (remove-if (lambda (p) (out-of-bounds p grid))
-                       (list (list (+ y 1) x)
-                             (list (- y 1) x)
-                             (list y (+ x 1))
-                             (list y (- x 1))
-                             (list (+ y 1) (+ x 1))
-                             (list (+ y 1) (- x 1))
-                             (list (- y 1) (+ x 1))
-                             (list (- y 1) (- x 1))))))
+  (->> (list (list (+ y 1) x)
+             (list (- y 1) x)
+             (list y (+ x 1))
+             (list y (- x 1))
+             (list (+ y 1) (+ x 1))
+             (list (+ y 1) (- x 1))
+             (list (- y 1) (+ x 1))
+             (list (- y 1) (- x 1)))
+       (remove-if (lambda (p) (out-of-bounds p grid)))
+       (mapcar (lambda (p) (apply #'aref (cons grid p))))
+       (count-if (lambda (seat) (char= seat #\#)))))
 
 (defun seat (grid y x)
   (let ((v (aref grid y x)))

@@ -27,7 +27,7 @@
 (defun valid-policy2 (policy)
   (destructuring-bind ((pos1 pos2) letter password) policy
     (let ((i1 (- pos1 1)) (i2 (- pos2 1)))
-      (xor
+      (alexandria:xor
        (char= (char password i1) letter)
        (char= (char password i2) letter)))))
 

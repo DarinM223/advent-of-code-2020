@@ -1,4 +1,4 @@
-(defpackage day18 (:use :cl :iterate :utils))
+(defpackage day18 (:use :cl :arrows :iterate :utils))
 (in-package :day18)
 
 (defvar *input*
@@ -14,9 +14,9 @@
 (infix-math:declare-binary-operator <+> :from *)
 
 (defun replace-string (s plus-replace times-replace)
-  (cl-ppcre:regex-replace-all "[*]"
-                              (cl-ppcre:regex-replace-all "[+]" s plus-replace)
-                              times-replace))
+  (-<> s
+       (cl-ppcre:regex-replace-all "[+]" <> plus-replace)
+       (cl-ppcre:regex-replace-all "[*]" <> times-replace)))
 
 (defparameter *part1*
   (iter (for line in *input*)

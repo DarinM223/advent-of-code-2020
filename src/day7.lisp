@@ -1,4 +1,6 @@
-(defpackage day7 (:use :cl :iterate :utils))
+(defpackage day7
+  (:use :cl :arrows :iterate :utils)
+  (:import-from :alexandria :curry))
 (in-package :day7)
 
 (defvar *input*
@@ -14,13 +16,13 @@
       (setf chunk nil))))
 
 (defun process-line (line)
-  (let* ((words (mapcar (lambda (w) (string-trim ".," w))
-                        (uiop:split-string line :separator " ")))
-         (filtered (remove-if (lambda (w) (or (string= w "bag")
-                                              (string= w "bags")))
-                              words)))
+  (let ((words (->> line
+                    (uiop:split-string)
+                    (mapcar (curry #'string-trim ".,"))
+                    (remove-if (lambda (w) (or (string= w "bag")
+                                               (string= w "bags")))))))
     (destructuring-bind ((bagw1 bagw2) contains-bags)
-        (split-list (append filtered '("contain")) :separator "contain")
+        (split-list (append words '("contain")) :separator "contain")
       (values (concatenate 'string bagw1 bagw2)
               (iter (for (num w1 w2) in (list-chunks contains-bags))
                 (collect (list (parse-integer num)
